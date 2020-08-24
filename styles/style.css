@@ -12,12 +12,14 @@ body, html{
 .container{
     max-width: 1200px;
     padding: 0 2%;
+
 }
 
 header{
     height: 15vh;
 }
 
-footer{
+footer, .footer-replace{
     height: 10vh;
+    width: 100%;
 }
