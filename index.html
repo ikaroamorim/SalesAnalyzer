@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Analazier</title>
+
+    <!-- Bootstrap Files -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+    <!-- Page CSS-->
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
+
+<body>
+
+    <header class="bg-warning">
+        <div class="logo font-weight-bold">Sales Analyzer</div>
+    </header>
+
+    <section class="total">
+        <div class="container text-center">
+            <h3 class="text-center">Receita Total</h3>
+            <span class="text-center" id="total">R$ 0.00</span>
+        </div>
+    </section>
+
+    <section class="graf">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-lg-6 text-center">
+                    <canvas id="vendasMensais" width="450" height="320"></canvas>
+                </div>
+                <div class="col-12 col-lg-6 text-center">
+                    <canvas id="vendasDepto" width="450" height="320"></canvas>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6 col-md-3">
+                    <button type="button" class="btn btn-success rounded-pill w-100" data-toggle="modal"
+                        data-target="#addVendaModal">Adicionar Venda</button>
+                </div>
+                <div class="col-6 col-md-3">
+                    <button type="button" class="btn btn-primary rounded-pill w-100">Editar</button>
+                </div>
+                <div class="col-6 col-md-3">
+                    <button type="button" class="btn btn-danger rounded-pill w-100">Deletar</button>
+                </div>
+                <div class="col-6 col-md-3">
+                    <button type="button" class="btn btn-danger rounded-pill w-100">Zerar tabelas</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal -->
+    <div class="modal fade" id="addVendaModal" tabindex="-1" aria-labelledby="addVendaModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addVendaModalLabel">Adicionar Venda </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addForm">
+                        <div class="form-group">
+                            <label for="mesRef">Mês de Referência</label>
+                            <input type="month" class="form-control" id="mesRef">
+                        </div>
+                        <label for="valor ref">Valor:</label>
+                        <div class="input-group mb-3">
+
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">R$</span>
+                            </div>
+                            <input type="number" class="form-control" aria-label="Amount (to the nearest dollar)"
+                                id="valorRef">
+                            <div class="input-group-append">
+                                <span class="input-group-text">.00</span>
+                            </div>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1"
+                                value="alimentacao">
+                            <label class="form-check-label" for="inlineRadio1">Alimentação</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2"
+                                value="saude">
+                            <label class="form-check-label" for="inlineRadio2">Saúde</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3"
+                                value="vestuario">
+                            <label class="form-check-label" for="inlineRadio3">Vestuário</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success" data-dismiss="modal" onclick="addVenda()">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-warning fixed-bottom text-right">
+        <a href="https://ikaroamorim.github.io/" class="text-decoration-none">2020 - Ikaro Amorim e Silva</a>
+    </footer>
+
+    <!-- Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+        crossorigin="anonymous"></script>
+
+    <!-- Chart JS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.2/dist/Chart.min.js"></script>
+
+    <!-- Page JS -->
+    <script src="/scripts/script.js"></script>
+</body>
+
+</html>
