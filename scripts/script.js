@@ -1,10 +1,10 @@
 'use strict'
 
-//total
+//Label e variável total
 let totalLabel = document.getElementById('total')
-
 let total = 0;
 
+//Exemplo, array inicial
 let vendasArray = [
     {
         data: '2020-01',
@@ -31,22 +31,44 @@ let vendasArray = [
 //Gráficos
 let barctx = document.getElementById('vendasMensais').getContext('2d')
 let piectx = document.getElementById('vendasDepto').getContext('2d')
+let barChart
+let pieChart
+let barData = []
+let barLabels = []
+let barColors = []
+let totalVest = 0
+let totalAl = 0
+let totalSaude = 0
 
-desenhaBarGrafico()
-desenhaPieGrafico()
+renderGraficos()
 
-function desenhaBarGrafico() {
-    let barData = []
-    let barLabels = []
-    let barColors = []
+//Funções para renderizar os gráficos
+function renderGraficos() {
+    calculaBarGrafico()
+    calculaPieGrafico()
+    exibetotal()
+    desenhaBarGrafico()
+    desenhaPieGrafico()
+}
+
+
+
+function exibetotal() {
+    total = totalVest + totalAl + totalSaude
+    $('#total').html(`<strong>R$${total}</strong>`)
+}
+
+function calculaBarGrafico() {
+    barData = vendasArray.map(venda => { return venda.valor })
+    barLabels = vendasArray.map(venda => { return venda.data })
     vendasArray.forEach(element => {
-        barLabels.push(element.data)
-        barData.push(element.valor)
         barColors.push(`rgba(${Math.floor(256 * Math.random())},${Math.floor(256 * Math.random())},${Math.floor(256 * Math.random())},0.7)`)
         total += element.valor
     })
+}
 
-    let barChart = new Chart(barctx, {
+function desenhaBarGrafico() {
+    barChart = new Chart(barctx, {
         "type": 'bar',
         "data": {
             "labels": barLabels,
@@ -71,16 +93,12 @@ function desenhaBarGrafico() {
         }
     })
 
-    $('#total').html(`<strong>R$${total}</strong>`)
 }
 
-
-
-function desenhaPieGrafico() {
-
-    let totalVest = 0
-    let totalAl = 0
-    let totalSaude = 0
+function calculaPieGrafico() {
+    totalVest = 0
+    totalAl = 0
+    totalSaude = 0
     vendasArray.forEach(element => {
         if (element.tipo === 'Alimentação') {
             totalAl += element.valor
@@ -90,7 +108,9 @@ function desenhaPieGrafico() {
             totalVest += element.valor
         }
     })
-    let pieChart = new Chart(piectx, {
+}
+function desenhaPieGrafico() {
+    pieChart = new Chart(piectx, {
         "type": "doughnut",
         "data": {
             "labels": ["Alimentação", "Saúde", "Vestuário"],
@@ -103,12 +123,28 @@ function desenhaPieGrafico() {
     });
 }
 
+//Função para adição de nova venda
 function addVenda() {
+    vendasArray.push(getFormInfo())
+
+    //Elimina o Gráfico já produzido
+    barChart.destroy()
+    pieChart.destroy()
+
+    //Desenha um novo Gráfico
+    renderGraficos()
+
+    //Resetando os valores do Formulário
+    resetaForm()
+}
+
+//Função que obtém as informações do gráfico
+function getFormInfo() {
+
     let data = $('#mesRef').val()
     let valor = parseFloat($('#valorRef').val())
     let tipo
 
-    console.log($('#inlineRadio1').prop('checked'))
     if ($('#inlineRadio1').prop('checked')) {
         tipo = 'Alimentação'
     } else if ($('#inlineRadio2').prop('checked')) {
@@ -117,16 +153,46 @@ function addVenda() {
         tipo = 'Vestuário'
     }
 
-    vendasArray.push({ data, valor, tipo })
+    return { data, valor, tipo }
 
-    desenhaBarGrafico()
-    desenhaPieGrafico()
-
-    $('#addForm').each (function(){
-        this.reset();
-      });
 }
 
-function calculaTotal(){
+//Função responsável por resetar os valores do formulário
+function resetaForm() {
+    $('#addForm').each(function () {
+        this.reset();
+    });
+}
 
+function zerarTabelas(){
+    vendasArray = []
+
+     //Elimina o Gráfico já produzido
+     barChart.destroy()
+     pieChart.destroy()
+ 
+     //Desenha um novo Gráfico
+     renderGraficos()
+}
+
+function editarVenda(){
+    //recebe o mês preenchido
+    let data = $('#mesRef').val()
+
+    //obtém a venda daquele mês
+    let venda = vendasArray.find(item => item.data === data)
+
+    //preenche os campos com as info do mês obtido
+
+    //identifica o índice do campo a ser editado
+    index = vendasArray.findIndex(item => item.data === data )
+
+    //altera as informações com as informações do gráfico
+
+
+    //substitui as informações no array original
+    vendasArray.splice(index,1, venda)
+
+    //Desenha um novo Gráfico
+    renderGraficos()
 }
